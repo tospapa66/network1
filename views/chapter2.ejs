@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทที่ 2 - ระบบตัดเกรด</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Sarabun', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 h-screen flex overflow-hidden">
+
+    <aside class="bg-slate-800 text-white w-64 flex-shrink-0 flex flex-col hidden lg:flex">
+        <div class="p-4 border-b border-slate-700 font-bold text-xl">Course Menu</div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><a href="/" class="block px-4 py-2 hover:bg-slate-700 border-l-4 border-transparent">หน้าแรก</a></li>
+                <% chapters.forEach((chapter, index) => { %>
+                <li>
+                    <a href="<%= chapter.link %>" class="block px-4 py-2 hover:bg-slate-700 border-l-4 <%= active === ('ch' + (index+1)) ? 'border-blue-500 bg-slate-700' : 'border-transparent' %> truncate">
+                        <%= chapter.name %>
+                    </a>
+                </li>
+                <% }); %>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header class="bg-white shadow-sm p-4"><h1 class="text-2xl font-bold text-gray-800">บทที่ 2: Logic & Conditions</h1></header>
+
+        <main class="flex-1 overflow-y-auto p-10 bg-slate-50">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold mb-6 text-green-600 text-center">🎓 ระบบตัดเกรด</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">คะแนนรวม (0-100)</label>
+                    <input type="number" id="score" placeholder="กรอกคะแนนที่นี่" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none text-lg text-center" min="0" max="100">
+                </div>
+
+                <button onclick="calculateGrade()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-lg transition duration-200">
+                    ประมวลผลเกรด
+                </button>
+
+                <div id="gradeBox" class="mt-8 p-6 bg-gray-100 rounded-lg text-center hidden transition-all duration-500">
+                    <p class="text-gray-500">คุณได้เกรด</p>
+                    <div id="gradeText" class="text-6xl font-extrabold text-green-600 mt-2">A</div>
+                    <p id="gradeDesc" class="text-sm text-gray-400 mt-2">ยอดเยี่ยมมาก!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function calculateGrade() {
+            const score = parseInt(document.getElementById('score').value);
+            const box = document.getElementById('gradeBox');
+            const txt = document.getElementById('gradeText');
+            const desc = document.getElementById('gradeDesc');
+
+            if (isNaN(score) || score < 0 || score > 100) {
+                alert("กรุณากรอกคะแนน 0 - 100");
+                return;
+            }
+
+            let grade = '';
+            let color = '';
+            let message = '';
+
+            if (score >= 80) { grade = 'A'; color = 'text-green-600'; message = 'ยอดเยี่ยมมาก! (Excellent)'; }
+            else if (score >= 75) { grade = 'B+'; color = 'text-blue-500'; message = 'ดีมาก (Very Good)'; }
+            else if (score >= 70) { grade = 'B'; color = 'text-blue-600'; message = 'ดี (Good)'; }
+            else if (score >= 65) { grade = 'C+'; color = 'text-yellow-500'; message = 'ดีพอใช้ (Above Average)'; }
+            else if (score >= 60) { grade = 'C'; color = 'text-yellow-600'; message = 'พอใช้ (Average)'; }
+            else if (score >= 55) { grade = 'D+'; color = 'text-orange-500'; message = 'อ่อน (Below Average)'; }
+            else if (score >= 50) { grade = 'D'; color = 'text-orange-600'; message = 'อ่อนมาก (Poor)'; }
+            else { grade = 'F'; color = 'text-red-600'; message = 'ตก (Fail) - พยายามใหม่นะ'; }
+
+            // Update UI
+            txt.innerText = grade;
+            txt.className = `text-6xl font-extrabold mt-2 ${color}`;
+            desc.innerText = message;
+            box.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

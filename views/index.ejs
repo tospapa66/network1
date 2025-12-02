@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= course.code %> - <%= course.nameTH %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex overflow-hidden">
+
+    <aside id="sidebar" class="bg-slate-800 text-white w-64 flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col relative">
+        <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+            <h2 class="text-xl font-bold truncate">Course Menu</h2>
+            <button onclick="toggleSidebar()" class="lg:hidden text-gray-300 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4">
+           <ul class="space-y-1">
+    <li>
+        <a href="/" class="block px-4 py-2 hover:bg-slate-700 hover:text-blue-300 transition-colors border-l-4 <%= active === 'home' ? 'border-blue-500 bg-slate-700' : 'border-transparent' %>">
+            หน้าแรก (Course Info)
+        </a>
+    </li>
+    <% chapters.forEach((chapter, index) => { %>
+    <li>
+        <a href="<%= chapter.link %>" class="block px-4 py-2 hover:bg-slate-700 hover:text-blue-300 transition-colors border-l-4 <%= active === ('ch' + (index+1)) ? 'border-blue-500 bg-slate-700' : 'border-transparent' %> truncate">
+            <%= chapter.name %>
+        </a>
+    </li>
+    <% }); %>
+</ul>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700 text-xs text-gray-400 text-center">
+            &copy; 2024 Network Admin Class
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <header class="bg-white shadow-sm z-10 p-4 flex items-center">
+            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-blue-600 focus:outline-none mr-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <h1 class="text-lg md:text-2xl font-bold text-gray-800 truncate"><%= course.code %> <%= course.nameEN %></h1>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-10">
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold"><%= course.code %> (<%= course.credits %>)</div>
+                    <h2 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        <%= course.nameTH %>
+                    </h2>
+                    <p class="mt-2 text-xl text-gray-500"><%= course.nameEN %></p>
+                    
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                            <div class="sm:col-span-2">
+                                <dt class="text-sm font-medium text-gray-500">วิชาบังคับก่อน (Prerequisite)</dt>
+                                <dd class="mt-1 text-sm text-gray-900"><%= course.prerequisite %></dd>
+                            </div>
+                            
+                            <div class="sm:col-span-2">
+                                <dt class="text-sm font-medium text-gray-500">คำอธิบายรายวิชา (Thai)</dt>
+                                <dd class="mt-1 text-md text-gray-900 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                    <%= course.descriptionTH %>
+                                </dd>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <dt class="text-sm font-medium text-gray-500">Course Description (English)</dt>
+                                <dd class="mt-1 text-md text-gray-900 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                    <%= course.descriptionEN %>
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div class="mt-8">
+                        <a href="#" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                            เริ่มบทเรียนที่ 1
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        
+        function toggleSidebar() {
+            // เช็คว่าหน้าจอเล็กหรือใหญ่เพื่อปรับ logic การทำงาน
+            if (window.innerWidth >= 1024) {
+                // จอใหญ่: ยุบด้วยการปรับ width เป็น 0
+                if (sidebar.classList.contains('w-64')) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-0');
+                    sidebar.classList.add('overflow-hidden'); // ซ่อนเนื้อหาเมื่อยุบ
+                } else {
+                    sidebar.classList.remove('w-0');
+                    sidebar.classList.remove('overflow-hidden');
+                    sidebar.classList.add('w-64');
+                }
+            } else {
+                // จอเล็ก: อาจจะใช้วิธี Absolute position หรือ logic อื่น (ในที่นี้ใช้ logic เดียวกันเพื่อความง่าย)
+                if (sidebar.classList.contains('w-64')) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-0');
+                    sidebar.classList.add('overflow-hidden');
+                } else {
+                    sidebar.classList.remove('w-0');
+                    sidebar.classList.remove('overflow-hidden');
+                    sidebar.classList.add('w-64');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
